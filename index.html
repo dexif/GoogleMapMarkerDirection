@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+          html {
+            width: 100%;
+            height: 100%;
+          }
+ 
+          body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+          }
+ 
+          #map_canvas {
+            width: 100%;
+            height: 100%;
+          }
+        </style>
+ 
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    </head>
+    <body onload="initialize(-25.363882,131.044922)">
+        <div id="map_canvas"></div>
+ 
+        <script>
+ 
+        function createMarker(width, height, triangleHeight, degree) {
+ 
+          var canvas, context;
+ 
+          canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          degree = parseInt(degree);
+ 
+          context = canvas.getContext("2d");
+          
+          context.clearRect(0,0,width,height);
+          if(degree != 0){
+            context.translate(width/2, height/2);
+            context.rotate(degree*Math.PI/180);
+            context.translate(-width/2, -height/2);
+          }
+          context.beginPath();
+          context.moveTo(width/2, 0);
+          context.lineTo(width/2+triangleHeight/2, triangleHeight);
+          context.lineTo(width/2-triangleHeight/2, triangleHeight);
+          context.closePath();
+          context.fillStyle = "#ff0000";
+          context.fill();
+ 
+          return canvas.toDataURL();
+ 
+        }
+ 
+        function initialize(lat,lng) {
+          var map = new google.maps.Map(document.getElementById("map_canvas"), {
+            zoom: 4,
+            center: new google.maps.LatLng(lat,lng),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+ 
+  
+          var markerUnit = new google.maps.Marker({
+              position: new google.maps.LatLng(lat,lng),
+              map: map,
+              title:"Unit",
+              icon: "http://hosting.wialon.com/img/logo-small.png"
+          });
+          
+          var marker = new google.maps.Marker({
+              position: new google.maps.LatLng(lat,lng),
+              map: map,
+              title:"Triangle",
+              icon: createMarker(49, 49, 10, 45)
+          });
+
+        }
+ 
+        </script>
+    </body>
+</html>
